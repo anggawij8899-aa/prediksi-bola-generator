@@ -60,30 +60,58 @@ function generateScript() {
   const input = document.getElementById("inputText").value;
   const lines = input.split("\n").filter(line => line.trim() !== "");
   let scriptHTML = "";
+
+  // Tambah tanggal otomatis
+  const today = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const tanggal = today.toLocaleDateString('id-ID', options);
+  scriptHTML += `<div style="text-align:center;color:gold;font-weight:bold;margin-bottom:15px;font-size:18px;">
+    📅 ${tanggal}
+  </div>\n`;
+
+  // Tambah Announcement / Running Text Bar
+  scriptHTML += `<marquee style="background:gold;color:#111;font-weight:bold;padding:10px;border-radius:8px;margin-bottom:20px;">
+    ⚽ Selamat datang di Dashboard Prediksi Bola! Update terbaru setiap hari!
+  </marquee>\n`;
+
   let currentLeague = "";
 
   lines.forEach(line => {
     if (!line.includes("WIB")) {
       if (currentLeague !== "") scriptHTML += "</table>\n";
       currentLeague = line.trim();
-      scriptHTML += `<h3 style="color:lime;text-shadow:1px 1px 3px #000;text-align:center;margin:20px 0;font-size:22px;border-bottom:2px solid gold;padding-bottom:5px;'>${currentLeague}</h3>\n`;
+      scriptHTML += `<h3 style="color:lime;text-shadow:1px 1px 3px #000;text-align:center;margin:20px 0;font-size:22px;border-bottom:2px solid gold;padding-bottom:5px;">${currentLeague}</h3>\n`;
       scriptHTML += "<table style='width:100%;border-collapse:collapse;margin-bottom:25px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#1a1a1a,#333,#444);box-shadow:0 0 15px rgba(255,215,0,0.5);'>\n";
-      scriptHTML += "<tr style='background:#222;color:gold;font-weight:bold;'><th style='border:1px solid #555;padding:8px;'>Waktu</th><th style='border:1px solid #555;padding:8px;'>Tim</th><th style='border:1px solid #555;padding:8px;'>Prediksi</th></tr>\n";
+      scriptHTML += "<tr style='background:#222;color:gold;font-weight:bold;text-align:center;'><th style='border:1px solid #555;padding:8px;'>Waktu</th><th style='border:1px solid #555;padding:8px;'>Tim</th><th style='border:1px solid #555;padding:8px;'>Prediksi</th></tr>\n";
     } else {
-      const parts = line.split(" ");
-      const waktu = parts[0] + " " + parts[1] + " " + parts[2];
-      const timA = parts.slice(3, parts.indexOf("vs")).join(" ");
-      const timB = parts.slice(parts.indexOf("vs") + 1, parts.length - 2).join(" ");
-      const skor = parts.slice(-2).join(" ");
-      scriptHTML += `<tr style='border-bottom:1px solid #555;background:rgba(0,0,0,0.6);color:#eee;'>
-        <td style='border:1px solid #555;padding:8px;'>${waktu}</td>
-        <td style='border:1px solid #555;padding:8px;'>${timA} vs ${timB}</td>
-        <td style='border:1px solid #555;padding:8px;color:lime;font-weight:bold;'>${skor}</td>
-      </tr>\n`;
+      const match = line.match(/^(\d{2}\/\d{2}\s+\d{2}:\d{2}\s+WIB)\s+(.+?)\s+vs\s+(.+?)\s+(\d+\s*[:\-]\s*\d+)$/);
+
+      if (match) {
+        const waktu = match[1];
+        const timA = match[2];
+        const timB = match[3];
+        const prediksi = match[4];
+
+        scriptHTML += `<tr style='border-bottom:1px solid #555;background:rgba(0,0,0,0.6);color:#eee;text-align:center;'>
+          <td style='border:1px solid #555;padding:8px;'>${waktu}</td>
+          <td style='border:1px solid #555;padding:8px;'>${timA} vs ${timB}</td>
+          <td style='border:1px solid #555;padding:8px;color:lime;font-weight:bold;'>${prediksi}</td>
+        </tr>\n`;
+      }
     }
   });
 
   scriptHTML += "</table>\n";
   document.getElementById("output").textContent = scriptHTML;
+}
+
+// Fungsi Copy All Script
+function copyScript() {
+  const output = document.getElementById("output").textContent;
+  navigator.clipboard.writeText(output).then(() => {
+    alert("✅ Script berhasil dicopy ke clipboard bosku!");
+  }).catch(err => {
+    alert("❌ Gagal copy script: " + err);
+  });
 }
 </script>
