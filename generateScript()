@@ -1,2 +1,0 @@
-scriptHTML += "<table class='table-prediksi'>\n";
-scriptHTML += "<tr><th>Waktu</th><th>Tim</th><th>Prediksi</th></tr>\n";
