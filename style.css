@@ -1,0 +1,21 @@
+/* style.css */
+body {
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: gold;
+  text-align: center;
+}
+textarea {
+  width: 80%;
+  height: 100px;
+  margin: 10px;
+}
+table {
+  margin: auto;
+  border-collapse: collapse;
+  width: 80%;
+}
+td, th {
+  border: 1px solid gold;
+  padding: 8px;
+}
